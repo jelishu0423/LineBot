@@ -47,8 +47,12 @@ def handle_message(event):
         event.reply_token,
         TextSendMessage(text='Image has Upload'+ ' ' + event.message.id))
     
-    # 請api用get_message_content依照消息id將照片要回
+    # 請api用get_message_content依照訊息id將圖片要回
     message_content = line_bot_api.get_message_content(event.message.id)
+    
+    #請api用TextSendMessage回傳圖片的資料類型
+    message = TextSendMessage(text=str(type(message_content))
+    line_bot_api.reply_message(event.reply_token,message)
 
 #主程式
 import os
