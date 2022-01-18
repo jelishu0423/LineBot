@@ -51,8 +51,9 @@ def handle_message(event):
     message_content = line_bot_api.get_message_content(event.message.id)
     
     #請api用TextSendMessage回傳圖片的資料類型
-    message = TextSendMessage(text=str(type(message_content))
-    line_bot_api.reply_message(event.reply_token,message)
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=str(type(message_content))))
 
 #主程式
 import os
