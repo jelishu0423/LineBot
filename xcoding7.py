@@ -41,17 +41,19 @@ def callback():
  
 #訊息傳遞區塊
 ##### 基本上程式編輯都在這個function #####
-@handler.add(MessageEvent, message=TextMessage)
+ngrok_url = "https://88b3-1-171-241-102.ngrok.io"
+
+@handler.add(MessageEvent)
 def handle_message(event):
-    message = TextSendMessage(text=event.message.text)
-    if re.match('告訴我秘密',message):
-        image_message = ImageSendMessage(
-            original_content_url='https://images.builderservices.io/s/cdn/v1.0/i/m?url=https%3A%2F%2Fstorage.googleapis.com%2Fproduction-bluehost-v1-0-9%2F659%2F790659%2FAtmP8Pmy%2F9c8c1e647eb14e01898043c0c60bf03a&methods=resize%2C1000%2C5000',
-            preview_image_url='https://images.builderservices.io/s/cdn/v1.0/i/m?url=https%3A%2F%2Fstorage.googleapis.com%2Fproduction-bluehost-v1-0-9%2F659%2F790659%2FAtmP8Pmy%2Ffd2258c5ea6c43f591e8d9930d152b94&methods=resize%2C1000%2C5000'
-        )
-        line_bot_api.reply_message(event.reply_token, image_message)
-    else:
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(message))
+	if (event.message.type == "image"):
+		SendImage = line_bot_api.get_message_content(event.message.id)
+
+		local_save = './static/' + event.message.id + '.png'
+		with open(local_save, 'wb') as fd:
+			for chenk in SendImage.iter_content():
+				fd.write(chenk)
+                
+		line_bot_api.reply_message(event.reply_token, ImageSendMessage(original_content_url = ngrok_url + "/static/" + event.message.id + ".png", preview_image_url = ngrok_url + "/static/" + event.message.id + ".png"))
 
 #主程式
 import os
