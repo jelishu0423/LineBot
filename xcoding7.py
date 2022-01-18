@@ -40,10 +40,15 @@ def callback():
  
 #訊息傳遞區塊
 ##### 基本上程式編輯都在這個function #####
-@handler.add(MessageEvent, message=TextMessage)
+@handler.add(MessageEvent, message=ImageMessage)
 def handle_message(event):
-    message = TextSendMessage(text=event.message.text)
-    line_bot_api.reply_message(event.reply_token,message)
+    # 請api回覆已經上傳
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text='Image has Upload'+ ' ' + event.message.id))
+    
+    # 請api用get_message_content依照消息id將照片要回
+    message_content = line_bot_api.get_message_content(event.message.id)
 
 #主程式
 import os
