@@ -53,7 +53,7 @@ def handle_message(event):
     #請api用TextSendMessage回傳圖片的資料類型
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=str(type(message_content))))
+        TextSendMessage(text='test'))
 
 #主程式
 import os
