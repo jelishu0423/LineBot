@@ -41,19 +41,23 @@ def callback():
  
 #訊息傳遞區塊
 ##### 基本上程式編輯都在這個function #####
-ngrok_url = "https://88b3-1-171-241-102.ngrok.io"
+def glucose_graph(client_id, imgpath):
+	im = pyimgur.Imgur(client_id)
+	upload_image = im.upload_image(imgpath, title="Uploaded with PyImgur")
+	return upload_image.link
 
 @handler.add(MessageEvent)
 def handle_message(event):
 	if (event.message.type == "image"):
 		SendImage = line_bot_api.get_message_content(event.message.id)
 
-		local_save = './static/' + event.message.id + '.png'
+		local_save = './Image/' + event.message.id + '.png'
 		with open(local_save, 'wb') as fd:
 			for chenk in SendImage.iter_content():
 				fd.write(chenk)
-                
-		line_bot_api.reply_message(event.reply_token, ImageSendMessage(original_content_url = ngrok_url + "/static/" + event.message.id + ".png", preview_image_url = ngrok_url + "/static/" + event.message.id + ".png"))
+
+		img_url = glucose_graph(client_id, local_save)
+		line_bot_api.reply_message(event.reply_token, ImageSendMessage(original_content_url=img_url, preview_image_url=img_url))
 
 #主程式
 import os
