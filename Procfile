@@ -1,1 +1,1 @@
-web: python xcoding7.py
+web: python app.py
