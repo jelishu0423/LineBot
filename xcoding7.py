@@ -42,10 +42,6 @@ def callback():
 ##### 基本上程式編輯都在這個function #####
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_message(event):
-    from bttr.lit_bttr import LitBTTR
-    from PIL import Image
-    from torchvision.transforms import ToTensor
-    
     # 請api用get_message_content依照訊息id將圖片要回
     message_content = line_bot_api.get_message_content(event.message.id)
     
