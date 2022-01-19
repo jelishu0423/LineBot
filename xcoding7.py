@@ -45,10 +45,17 @@ def handle_message(event):
     # 請api用get_message_content依照訊息id將圖片要回
     message_content = line_bot_api.get_message_content(event.message.id)
     
+    from PIL import Image
+    from torchvision.transforms import ToTensor
+    #ckpt = "0_5442.ckpt"
+    #img_path = 'example/70_carlos.bmp'
+    #model = LitBTTR.load_from_checkpoint(ckpt)
+    img = Image.open(message_content)
+    
     # 請api回覆已經上傳
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text='Image has Upload'+ ' ' + event.message.id + '\n' + str(type(message_content))))
+        TextSendMessage(text='Image has Upload'+ ' ' + event.message.id + '\n' + str(type(img))))
 
 
 #主程式
