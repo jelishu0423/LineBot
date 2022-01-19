@@ -48,7 +48,7 @@ def handle_message(event):
     # 請api回覆已經上傳
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text='Image has Upload'+ ' ' + event.message.id + '\n' + str(list(message_content))))
+        TextSendMessage(text='Image has Upload'+ ' ' + event.message.id + '\n' + str(message_content)))
 
 #主程式
 import os
