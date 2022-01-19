@@ -38,17 +38,33 @@ def callback():
     return 'OK'
 
  
-#訊息傳遞區塊
-##### 基本上程式編輯都在這個function #####
-@handler.add(MessageEvent, message=ImageMessage)
-def handle_message(event):
-    # 請api用get_message_content依照訊息id將圖片要回
-    message_content = line_bot_api.get_message_content(event.message.id)
-    
-    # 請api回覆已經上傳
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text='Image has Upload'+ ' ' + event.message.id + '\n' + str(message_content)))
+def lambda_handler(event, context):
+    @handler.add(MessageEvent, message=ImageMessage)
+    def handle_message(event):
+        message_content = line_bot_api.get_message_content(event.message.id)
+
+        tempfile_path = os.path.join("/tmp", "tempfile")
+        with open(tempfile_path, 'wb') as fd:
+            for chunk in message_content.iter_content():
+                fd.write(chunk)
+        data_samples = []
+        with open(tempfile_path, "rb") as imageFile:
+            image_str = base64.b64encode(imageFile.read()).decode('utf-8')
+            data_samples.append({'image_bytes': {'b64': image_str}})
+
+        # Create payload request
+        payload = json.dumps({"instances": data_samples})
+        server_endpoint = 'YOUR_SERVER_ENDPOINT'
+        # Send prediction request
+        r = requests.post(server_endpoint, data=payload)
+        probability = json.loads(r.content)['predictions']
+        (cat_probability, dog_probability) = tuple(probability[0])
+        response_text = "我來分析，這張圖{0}%是貓{1}，{2}%是狗{3}".format(
+            round(cat_probability*100, 1), chr(0x1F63A), round(dog_probability*100, 1), chr(0x1F436))
+
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=response_text))
 
 
 #主程式
