@@ -65,7 +65,18 @@ def lambda_handler(event, context):
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=response_text))
-
+    try:
+        # get X-Line-Signature header value
+        signature = event['headers']['X-Line-Signature']
+        # get event body
+        body = event['body']
+        # handle webhook body
+        handler.handle(body, signature)
+    except InvalidSignatureError:
+        return {'statusCode': 400, 'body': 'InvalidSignature'}
+    except Exception as e:
+        return {'statusCode': 400, 'body': json.dumps(str(e))}
+    return {'statusCode': 200, 'body': 'OK'}
 
 #主程式
 import os
