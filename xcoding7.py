@@ -50,7 +50,7 @@ def handle_message(event):
     #ckpt = "0_5442.ckpt"
     #img_path = 'example/70_carlos.bmp'
     #model = LitBTTR.load_from_checkpoint(ckpt)
-    img = Image.open(message_content)
+    img = Image.open(str(message_content))
     
     # 請api回覆已經上傳
     line_bot_api.reply_message(
